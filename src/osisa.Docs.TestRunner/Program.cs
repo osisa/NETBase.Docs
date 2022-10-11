@@ -6,7 +6,7 @@ await Bootstrapper
     .CreateDocs(args)
     .SetRootPath(@"C:/TestBin")
     ////.AddAssemblyFiles("src/**/*.dll")
-    .AddSolutionFiles(@"**/*.sln")
+    ////.AddSolutionFiles(@"**/*.sln")
     ////.AddSetting("SourceFiles", string.Empty)
     .RunAsync();
 

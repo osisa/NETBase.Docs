@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using osisa.Ensure;
@@ -12,6 +14,7 @@ using Shouldly;
 using Statiq.App;
 using Statiq.Common;
 using Statiq.Core;
+using Statiq.Docs;
 using Statiq.Testing;
 
 using static osisa.Docs.Tests.TestInfrastructure.TestValues;
@@ -89,6 +92,7 @@ namespace osisa.Docs.Tests
             BootstrapperTestResult result = await bootstrapper.RunTestAsync();
 
             // Assert
+            TestContext.WriteLogs(result);
             result.Outputs.Count.ShouldBe(1);
             result.Outputs.First().Key.ShouldBe("test");
             Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
@@ -96,14 +100,11 @@ namespace osisa.Docs.Tests
             IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
             inDocuments.Length.ShouldBe(1);
             inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
-            TestContext.WriteLogs(result);
         }
 
         [TestMethod]
         public async Task CollectShouldNotReturnNullAsync()
         {
-            // Arrange
-
             // Act
             BootstrapperTestResult result = await Bootstrapper
                 .Factory
@@ -113,6 +114,125 @@ namespace osisa.Docs.Tests
 
             // Assert
             result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task Run1TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
+        {
+            // Arrange
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDocs(Array.Empty<string>())
+                .SetRootPath(TestPath);
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
+            TestContext.WriteLogs(result);
+            result.Outputs.Count.ShouldBe(12);
+            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
+            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Code"][Phase.Input].Length.ShouldBe(4);
+            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
+            ////TestContext.WriteDocs("Inputs", Phase.Input);
+            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
+
+            ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            ////dictionary.Count.ShouldBe(1);
+            ////IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            ////inDocuments.Length.ShouldBe(0);
+            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
+        }
+
+        [TestMethod]
+        public async Task Run2TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
+        {
+            // Arrange
+            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDocs(Array.Empty<string>())
+                .AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
+                .SetRootPath(TestPath);
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
+            TestContext.WriteLogs(result);
+            result.Outputs.Count.ShouldBe(12);
+            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
+            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Code"][Phase.Input].Length.ShouldBe(3);
+            TestContext.WriteDocs(result, "Code", Phase.Input);
+            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
+            ////TestContext.WriteDocs("Inputs", Phase.Input);
+            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
+
+            ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            ////dictionary.Count.ShouldBe(1);
+            ////IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            ////inDocuments.Length.ShouldBe(0);
+            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
+        }
+
+        [TestMethod]
+        public async Task Run3TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
+        {
+            // Arrange
+            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDocs(Array.Empty<string>())
+                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
+                .AddSetting("SourceFiles", string.Empty)
+                .AddProjectFiles("../src/**/*.csproj")
+                .SetRootPath(TestPath);
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
+            TestContext.WriteLogs(result);
+            result.Outputs.Count.ShouldBe(12);
+            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
+            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Code"][Phase.Input].Length.ShouldBe(3);
+            TestContext.WriteDocs(result, "Code", Phase.Input);
+            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
+            ////TestContext.WriteDocs("Inputs", Phase.Input);
+            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
+
+            ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            ////dictionary.Count.ShouldBe(1);
+            ////IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            ////inDocuments.Length.ShouldBe(0);
+            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
     }
 }

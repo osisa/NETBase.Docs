@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -52,7 +54,7 @@ namespace osisa.Docs.Tests
         }
 
         [TestMethod]
-        public async Task GetCodeFiles3Async()
+        public async Task RunAsyncShouldReturnExitCodeNormalAsync()
         {
             // Arrange
             Bootstrapper bootstrapper = Bootstrapper
@@ -68,11 +70,11 @@ namespace osisa.Docs.Tests
             int result = await bootstrapper.RunAsync();
 
             // Assert
-            result.ShouldBe(0);
+            result.ShouldBe((int)ExitCode.Normal);
         }
 
         [TestMethod]
-        public async Task GetCodeFiles4Async()
+        public async Task RunTestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
         {
             // Arrange
             Bootstrapper bootstrapper = Bootstrapper
@@ -89,11 +91,16 @@ namespace osisa.Docs.Tests
             // Assert
             result.Outputs.Count.ShouldBe(1);
             result.Outputs.First().Key.ShouldBe("test");
+            Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            dictionary.Count.ShouldBe(4);
+            IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            inDocuments.Length.ShouldBe(1);
+            inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
             TestContext.WriteLogs(result);
         }
 
         [TestMethod]
-        public async Task CollectAsync()
+        public async Task CollectShouldNotReturnNullAsync()
         {
             // Arrange
 

@@ -72,6 +72,27 @@ namespace osisa.Docs.Tests
         }
 
         [TestMethod]
+        public async Task GetCodeFiles4Async()
+        {
+            // Arrange
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDefault(Array.Empty<string>())
+                .BuildPipeline("test", pipeline => pipeline
+                    .WithInputModules(new ReadFiles("**/*.*"))
+                    .WithProcessModules(new WriteFiles()))
+                .SetRootPath(TestPath);
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
+            result.Outputs.Count.ShouldBe(1);
+            result.Outputs.First().Key.ShouldBe("test");
+            TestContext.WriteLogs(result);
+        }
+
+        [TestMethod]
         public async Task CollectAsync()
         {
             // Arrange

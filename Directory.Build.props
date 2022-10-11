@@ -22,6 +22,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <StatiqFrameworkVersion>1.0.0-beta.62</StatiqFrameworkVersion>
+    <StatiqWebVersion>1.0.0-beta.49</StatiqWebVersion>
+
   </PropertyGroup>
 
   <ItemGroup>

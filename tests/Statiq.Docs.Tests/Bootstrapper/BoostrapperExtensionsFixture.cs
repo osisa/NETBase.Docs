@@ -209,6 +209,8 @@ namespace Statiq.Docs.Tests.Bootstrapper
                             "**/bar/*.sln"
                         },
                         true);
+
+                System.Collections.Generic.IReadOnlyList<string> xx = result.Engine.Settings.GetList<string>(DocsKeys.SolutionFiles);
             }
         }
 

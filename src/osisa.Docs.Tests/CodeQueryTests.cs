@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Moq;
-
-using osisa.Docs.Tests.TestInfrastructure;
+using osisa.Ensure;
 
 using Shouldly;
 
 using Statiq.App;
-using Statiq.CodeAnalysis;
 using Statiq.Common;
 using Statiq.Core;
 using Statiq.Docs;
@@ -36,23 +30,26 @@ namespace osisa.Docs.Tests
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public TestContext TestContext { get; set; }
 
-        /////async Task GetCodeFilesAsync()
         [TestMethod]
-        public async Task GetCodeFilesAsync()
+        public async Task RunTestAsyncShouldReturnFileSystemWithDefaultPathAsync()
         {
             // Arrange
             Bootstrapper bootstrapper = Bootstrapper
                 .Factory
-                .Create(Array.Empty<string>())
+                .Create(Array.Empty<string>()) ////new string[] { "--" });
                 .SetRootPath(TestPath);
 
             // Act
-            BootstrapperTestResult result = await bootstrapper.RunTestAsync(LogLevel.Information);
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
 
             // Assert
-            result.ExitCode.ShouldBe(0);
+            TestContext.WriteLine(result.LogMessages.ToArray().ListToString(t => t.FormattedMessage, SpecialCharacterConstants.CRLF));
+            ////result.Engine.
+            result.ExitCode.ShouldBe((int)ExitCode.Normal);
+
+            TestContext.WriteLine("Output:{0}\r\n", result.Outputs.ToArray().ListToString(t => t.Value.EnsureToString(), SpecialCharacterConstants.CRLF));
             result.Outputs.Count.ShouldBe(0);
-            result.ShouldNotBeNull();
+
             bootstrapper.FileSystem.ShouldNotBeNull();
             TestContext.WriteLine("Files: {0}", bootstrapper.FileSystem.RootPath);
             bootstrapper.FileSystem.RootPath.ShouldBe(TestPath);
@@ -79,46 +76,46 @@ namespace osisa.Docs.Tests
             result.ShouldBe(0);
         }
 
-        [TestMethod]
-        public async Task GetCodeFiles2Async()
-        {
-            // Arrange
-            Bootstrapper xx = Bootstrapper.Factory.Create(Array.Empty<string>()).SetRootPath(@"c:\TestBin");
-            IExecutionContext ctx = new Mock<IExecutionContext>().Object;
-            AnalyzeCSharp analyzer = new AnalyzeCSharp()
-                .WhereNamespaces(ctx.Settings.GetBool(DocsKeys.IncludeGlobalNamespace))
-                .WherePublic()
-                .WithCssClasses("code", "cs")
-                .WithDestinationPrefix(ctx.GetPath(DocsKeys.ApiPath))
-                .WithAssemblies(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.AssemblyFiles)))
-                .WithProjects(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.ProjectFiles)))
-                .WithSolutions(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.SolutionFiles)))
-                .WithAssemblySymbols()
-                .WithImplicitInheritDoc(ctx.GetBool(DocsKeys.ImplicitInheritDoc));
+        ////[TestMethod]
+        ////public async Task GetCodeFiles2Async()
+        ////{
+        ////    // Arrange
+        ////    Bootstrapper xx = Bootstrapper.Factory.Create(Array.Empty<string>()).SetRootPath(@"c:\TestBin");
+        ////    IExecutionContext ctx = new Mock<IExecutionContext>().Object;
+        ////    AnalyzeCSharp analyzer = new AnalyzeCSharp()
+        ////        .WhereNamespaces(ctx.Settings.GetBool(DocsKeys.IncludeGlobalNamespace))
+        ////        .WherePublic()
+        ////        .WithCssClasses("code", "cs")
+        ////        .WithDestinationPrefix(ctx.GetPath(DocsKeys.ApiPath))
+        ////        .WithAssemblies(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.AssemblyFiles)))
+        ////        .WithProjects(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.ProjectFiles)))
+        ////        .WithSolutions(Config.FromContext<IEnumerable<string>>(ctx => ctx.GetList<string>(DocsKeys.SolutionFiles)))
+        ////        .WithAssemblySymbols()
+        ////        .WithImplicitInheritDoc(ctx.GetBool(DocsKeys.ImplicitInheritDoc));
 
-            // Act
-            IEnumerable<IDocument> result1 = await analyzer.ExecuteAsync(ctx);
-            IDocument[] result = result1.ToArray();
+        ////    // Act
+        ////    IEnumerable<IDocument> result1 = await analyzer.ExecuteAsync(ctx);
+        ////    IDocument[] result = result1.ToArray();
 
-            // Assert
-            result.ShouldNotBeNull();
-            result.Length.ShouldBe(1);
-        }
+        ////    // Assert
+        ////    result.ShouldNotBeNull();
+        ////    result.Length.ShouldBe(1);
+        ////}
 
-        [TestMethod]
-        public async Task MethodNamAsync()
-        {
-            // Arrange
-            BootstrapperTestResult xx = await Bootstrapper
-                .Factory
-                .CreateDocs(Array.Empty<string>())
-                .SetRootPath(@"C:/docgen")
-                .AddSetting("SourceFiles", "src/osisa.Project/**/*.cs")
-                .RunTestAsync();
+        ////[TestMethod]
+        ////public async Task MethodNamAsync()
+        ////{
+        ////    // Arrange
+        ////    BootstrapperTestResult xx = await Bootstrapper
+        ////        .Factory
+        ////        .CreateDocs(Array.Empty<string>())
+        ////        .SetRootPath(@"C:/docgen")
+        ////        .AddSetting("SourceFiles", "src/osisa.Project/**/*.cs")
+        ////        .RunTestAsync();
 
-            // Act
-            // Assert
-        }
+        ////    // Act
+        ////    // Assert
+        ////}
 
         [TestMethod]
         public async Task CollectAsync()

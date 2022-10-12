@@ -1,0 +1,10 @@
+<StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>osisa</Value>
+    </CollectionProperty>
+    <CollectionProperty Name="DictionaryFolders">
+      <Value>c:\temp</Value>
+    </CollectionProperty>
+  </GlobalSettings>
+</StyleCopSettings> 

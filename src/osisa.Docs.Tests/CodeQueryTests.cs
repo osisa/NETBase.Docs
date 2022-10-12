@@ -1,12 +1,18 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="o.s.i.s.a. GmbH" file="CodeQueryTests.cs">
+//    (c) 2014. See licence text in binary folder.
+// </copyright>
+//  --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using osisa.Docs.Tests.TestInfrastructure;
 using osisa.Ensure;
 
 using Shouldly;
@@ -19,89 +25,74 @@ using Statiq.Testing;
 
 using static osisa.Docs.Tests.TestInfrastructure.TestValues;
 
-#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace osisa.Docs.Tests
-#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
+    /// <summary>   (Unit Test Class) a code query tests. </summary>
     [TestClass]
     public class CodeQueryTests
     {
-        // ReSharper disable once UnusedMember.Global
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        #region Public Properties
+
+        /// <summary>
+        /// ReSharper disable once UnusedMember.Global ReSharper disable once MemberCanBePrivate.Global
+        /// ReSharper disable once UnusedAutoPropertyAccessor.Global.
+        /// </summary>
+        /// <value> The test context. </value>
         public TestContext TestContext { get; set; }
 
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// (Unit Test Method) adds project files should return one input document asynchronous.
+        /// </summary>
+        /// <returns>   A Task. </returns>
         [TestMethod]
-        public async Task RunTestAsyncShouldReturnFileSystemWithDefaultPathAsync()
+        public async Task AddProjectFilesShouldReturnOneInputDocumentAsync()
         {
             // Arrange
+            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
             Bootstrapper bootstrapper = Bootstrapper
                 .Factory
-                .Create(Array.Empty<string>())
-                .SetRootPath(TestPath);
-
-            // Act
-            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
-
-            // Assert
-            TestContext.WriteLine(result.LogMessages.ToArray().ListToString(t => t.FormattedMessage, SpecialCharacterConstants.CRLF));
-            result.ExitCode.ShouldBe((int)ExitCode.Normal);
-
-            TestContext.WriteLine("Output:{0}\r\n", result.Outputs.ToArray().ListToString(t => t.Value.EnsureToString(), SpecialCharacterConstants.CRLF));
-            result.Outputs.Count.ShouldBe(0);
-
-            bootstrapper.FileSystem.ShouldNotBeNull();
-            TestContext.WriteLine("Files: {0}", bootstrapper.FileSystem.RootPath);
-            bootstrapper.FileSystem.RootPath.ShouldBe(TestPath);
-            TestContext.WriteLine("Output: {0}", bootstrapper.FileSystem.OutputPath);
-        }
-
-        [TestMethod]
-        public async Task RunAsyncShouldReturnExitCodeNormalAsync()
-        {
-            // Arrange
-            Bootstrapper bootstrapper = Bootstrapper
-                .Factory
-                .CreateDefault(Array.Empty<string>())
-                .BuildPipeline("test", pipeline => pipeline
-                    .WithInputModules(new ReadFiles("**/*.*"))
-                    .WithProcessModules(new WriteFiles()))
-                    ////.WithOutputModules(new WriteFiles()))
-                .SetRootPath(TestPath);
-
-            // Act
-            int result = await bootstrapper.RunAsync();
-
-            // Assert
-            result.ShouldBe((int)ExitCode.Normal);
-        }
-
-        [TestMethod]
-        public async Task RunTestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
-        {
-            // Arrange
-            Bootstrapper bootstrapper = Bootstrapper
-                .Factory
-                .CreateDefault(Array.Empty<string>())
-                .BuildPipeline("test", pipeline => pipeline
-                    .WithInputModules(new ReadFiles("**/*.*"))
-                    .WithProcessModules(new WriteFiles()))
-                .SetRootPath(TestPath);
+                .CreateDocs(Array.Empty<string>())
+                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
+                .SetRootPath(TestPath)
+                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs");
+                .AddSetting("SourceFiles", "../src/**/TestCoreClassLibrary.csproj")
+                .AddProjectFiles("../src/**/TestCoreClassLibrary.csproj");
 
             // Act
             BootstrapperTestResult result = await bootstrapper.RunTestAsync();
 
             // Assert
             TestContext.WriteLogs(result);
-            result.Outputs.Count.ShouldBe(1);
-            result.Outputs.First().Key.ShouldBe("test");
-            Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
-            dictionary.Count.ShouldBe(4);
-            IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
-            inDocuments.Length.ShouldBe(1);
-            inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
+            result.Outputs.Count.ShouldBe(12);
+            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
+            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Code"][Phase.Input].Length.ShouldBe(1);
+            TestContext.WriteDocuments(result, "Code", Phase.Input);
+            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
+            ////TestContext.WriteDocs("Inputs", Phase.Input);
+            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
+            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
+
+            ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            ////dictionary.Count.ShouldBe(1);
+            ////IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            ////inDocuments.Length.ShouldBe(0);
+            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
 
+        /// <summary>   (Unit Test Method) collect should not return null asynchronous. </summary>
+        /// <returns>   A Task. </returns>
         [TestMethod]
         public async Task CollectShouldNotReturnNullAsync()
         {
@@ -116,6 +107,11 @@ namespace osisa.Docs.Tests
             result.ShouldNotBeNull();
         }
 
+        /// <summary>
+        /// (Unit Test Method) executes the '1 test asynchronous test pipe line should return one input
+        /// document asynchronous' operation.
+        /// </summary>
+        /// <returns>   A Task. </returns>
         [TestMethod]
         public async Task Run1TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
         {
@@ -153,38 +149,104 @@ namespace osisa.Docs.Tests
             ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
 
+        /// <summary>
+        /// (Unit Test Method) executes the 'asynchronous should return exit code normal asynchronous'
+        /// operation.
+        /// </summary>
+        /// <returns>   A Task. </returns>
         [TestMethod]
-        public async Task Run2TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
+        public async Task RunAsyncShouldReturnExitCodeNormalAsync()
         {
             // Arrange
-            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
             Bootstrapper bootstrapper = Bootstrapper
                 .Factory
-                .CreateDocs(Array.Empty<string>())
-                .AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
+                .CreateDefault(Array.Empty<string>())
+                .BuildPipeline(
+                    "test",
+                    pipeline => pipeline
+                        .WithInputModules(new ReadFiles("**/*.*"))
+                        .WithProcessModules(new WriteFiles()))
+                ////.WithOutputModules(new WriteFiles()))
+                .SetRootPath(TestPath);
+
+            // Act
+            int result = await bootstrapper.RunAsync();
+
+            // Assert
+            result.ShouldBe((int)ExitCode.Normal);
+        }
+
+        /// <summary>
+        /// (Unit Test Method) executes the 'test asynchronous should return file system with default
+        /// path asynchronous' operation.
+        /// </summary>
+        /// <returns>   A Task. </returns>
+        [TestMethod]
+        public async Task RunTestAsync_ShouldReturnFileSystemWithDefaultPathAsync()
+        {
+            // Arrange
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .Create(Array.Empty<string>())
                 .SetRootPath(TestPath);
 
             // Act
             BootstrapperTestResult result = await bootstrapper.RunTestAsync();
 
             // Assert
+            TestContext.WriteLine(result.LogMessages.ToArray().ListToString(t => t.FormattedMessage, SpecialCharacterConstants.CRLF));
+            result.ExitCode.ShouldBe((int)ExitCode.Normal);
+
+            TestContext.WriteLine("Output:{0}\r\n", result.Outputs.ToArray().ListToString(t => t.Value.EnsureToString(), SpecialCharacterConstants.CRLF));
+            result.Outputs.Count.ShouldBe(0);
+
+            bootstrapper.FileSystem.ShouldNotBeNull();
+            TestContext.WriteLine("Files: {0}", bootstrapper.FileSystem.RootPath);
+            bootstrapper.FileSystem.RootPath.ShouldBe(TestPath);
+            TestContext.WriteLine("Output: {0}", bootstrapper.FileSystem.OutputPath);
+        }
+
+        /// <summary>
+        /// (Unit Test Method) executes the 'test asynchronous should return 3 code items and 9 input
+        /// items asynchronous' operation.
+        /// </summary>
+        /// <returns>   A Task. </returns>
+        [TestMethod]
+        public async Task RunTestAsyncShouldReturn3CodeItemsAnd9InputItemsAsync()
+        {
+            // Arrange
+            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDocs(Array.Empty<string>())
+                .SetRootPath(TestPath)
+                .AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs");
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
             TestContext.WriteLogs(result);
+            TestContext.WriteDocuments(result);
+
+            result.ShouldHaveCodeElements(3, 9);
             result.Outputs.Count.ShouldBe(12);
-            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
-            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Code"][Phase.Input].Length.ShouldBe(3);
-            TestContext.WriteDocs(result, "Code", Phase.Input);
-            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
-            ////TestContext.WriteDocs("Inputs", Phase.Input);
-            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
+
+            ////KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
+            ////result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Code"][Phase.Input].Length.ShouldBe(3);
+            ////TestContext.WriteDocs(result, "Code", Phase.Input);
+            ////result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
+            ////////TestContext.WriteDocs("Inputs", Phase.Input);
+            ////result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
+            ////result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
 
             ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
             ////dictionary.Count.ShouldBe(1);
@@ -193,17 +255,23 @@ namespace osisa.Docs.Tests
             ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
 
+        /// <summary>
+        /// (Unit Test Method) executes the 'test asynchronous test pipe line should return one input
+        /// document asynchronous' operation.
+        /// </summary>
+        /// <returns>   A Task. </returns>
         [TestMethod]
-        public async Task Run3TestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
+        public async Task RunTestAsyncTestPipeLineShouldReturnOneInputDocumentAsync()
         {
             // Arrange
-            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
             Bootstrapper bootstrapper = Bootstrapper
                 .Factory
-                .CreateDocs(Array.Empty<string>())
-                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
-                .AddSetting("SourceFiles", string.Empty)
-                .AddProjectFiles("../src/**/*.csproj")
+                .CreateDefault(Array.Empty<string>())
+                .BuildPipeline(
+                    "test",
+                    pipeline => pipeline
+                        .WithInputModules(new ReadFiles("**/*.*"))
+                        .WithProcessModules(new WriteFiles()))
                 .SetRootPath(TestPath);
 
             // Act
@@ -211,29 +279,16 @@ namespace osisa.Docs.Tests
 
             // Assert
             TestContext.WriteLogs(result);
-            result.Outputs.Count.ShouldBe(12);
-            KeyValuePair<string, Dictionary<Phase, ImmutableArray<IDocument>>>[] outputs = result.Outputs.ToArray();
-            result.Outputs["Api"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Archives"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Assets"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Code"][Phase.Input].Length.ShouldBe(3);
-            TestContext.WriteDocs(result, "Code", Phase.Input);
-            result.Outputs["Content"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Data"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["DirectoryMetadata"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Feeds"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Inputs"][Phase.Input].Length.ShouldBe(9);
-            ////TestContext.WriteDocs("Inputs", Phase.Input);
-            result.Outputs["Redirects"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["SearchIndex"][Phase.Input].Length.ShouldBe(0);
-            result.Outputs["Sitemap"][Phase.Input].Length.ShouldBe(0);
-
-            ////Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
-            ////dictionary.Count.ShouldBe(1);
-            ////IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
-            ////inDocuments.Length.ShouldBe(0);
-            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
+            result.Outputs.Count.ShouldBe(1);
+            result.Outputs.First().Key.ShouldBe("test");
+            Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
+            dictionary.Count.ShouldBe(4);
+            IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
+            inDocuments.Length.ShouldBe(1);
+            inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
+
+        #endregion
     }
 }
 

@@ -1,8 +1,13 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="o.s.i.s.a. GmbH" file="BootstrapperExtensions.cs">
+//    (c) 2014. See licence text in binary folder.
+// </copyright>
+//  --------------------------------------------------------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using Statiq.Common;
 using Statiq.Core;
 
@@ -10,13 +15,27 @@ namespace Statiq.Docs
 {
     public static class BootstrapperExtensions
     {
+        #region Static Fields
+
+        private static readonly string[] DefaultSourceFiles = new[] { "src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs" };
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public static TBootstrapper AddAssemblyFiles<TBootstrapper>(
+            this TBootstrapper bootstrapper,
+            params string[] sourceFiles)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper.AddCodeFiles(DocsKeys.AssemblyFiles, null, sourceFiles);
+
         /// <summary>
-        /// Adds Statiq Docs functionality to an existing bootstrapper.
+        ///     Adds Statiq Docs functionality to an existing bootstrapper.
         /// </summary>
         /// <remarks>
-        /// This method is useful when you want to add Statiq Docs support to an existing bootstrapper,
-        /// for example because you created the bootstrapper without certain default functionality
-        /// or don't want to add Statiq Web functionality.
+        ///     This method is useful when you want to add Statiq Docs support to an existing bootstrapper,
+        ///     for example because you created the bootstrapper without certain default functionality
+        ///     or don't want to add Statiq Web functionality.
         /// </remarks>
         /// <param name="boostrapper">The bootstrapper to add Statiq Docs functionality to.</param>
         /// <returns>The bootstrapper.</returns>
@@ -27,37 +46,6 @@ namespace Statiq.Docs
                 .AddDocsServices()
                 .AddDefaultDocsSettings()
                 .ConfigureEngine(e => e.LogAndCheckVersion(typeof(BootstrapperExtensions).Assembly, "Statiq Docs", DocsKeys.MinimumStatiqDocsVersion));
-
-        private static TBootstrapper AddDocsServices<TBootstrapper>(this TBootstrapper bootstrapper)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper
-                .ConfigureServices(services => services
-                    .AddSingleton(new TypeNameLinks()));
-
-        private static readonly string[] DefaultSourceFiles = new[]
-        {
-            "src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
-            "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs"
-        };
-
-        private static TBootstrapper AddDefaultDocsSettings<TBootstrapper>(this TBootstrapper bootstrapper)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper
-                .AddSettingsIfNonExisting(new Dictionary<string, object>
-                {
-                    {
-                        DocsKeys.SourceFiles,
-                        DefaultSourceFiles
-                    },
-                    { DocsKeys.ApiPath, "api" },
-                    { DocsKeys.OutputApiDocuments, true }
-                });
-
-        public static TBootstrapper AddSourceFiles<TBootstrapper>(
-            this TBootstrapper bootstrapper,
-            params string[] sourceFiles)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper.AddCodeFiles(DocsKeys.SourceFiles, DefaultSourceFiles, sourceFiles);
 
         public static TBootstrapper AddProjectFiles<TBootstrapper>(
             this TBootstrapper bootstrapper,
@@ -71,11 +59,15 @@ namespace Statiq.Docs
             where TBootstrapper : IBootstrapper =>
             bootstrapper.AddCodeFiles(DocsKeys.SolutionFiles, null, sourceFiles);
 
-        public static TBootstrapper AddAssemblyFiles<TBootstrapper>(
+        public static TBootstrapper AddSourceFiles<TBootstrapper>(
             this TBootstrapper bootstrapper,
             params string[] sourceFiles)
             where TBootstrapper : IBootstrapper =>
-            bootstrapper.AddCodeFiles(DocsKeys.AssemblyFiles, null, sourceFiles);
+            bootstrapper.AddCodeFiles(DocsKeys.SourceFiles, DefaultSourceFiles, sourceFiles);
+
+        #endregion
+
+        #region Methods
 
         private static TBootstrapper AddCodeFiles<TBootstrapper>(
             this TBootstrapper bootstrapper,
@@ -84,28 +76,43 @@ namespace Statiq.Docs
             string[] values)
             where TBootstrapper : IBootstrapper =>
             bootstrapper
-                .ConfigureSettings(settings =>
-                {
-                    if (values?.Length > 0)
+                .ConfigureSettings(
+                    settings =>
                     {
-                        HashSet<string> aggregateValues = new HashSet<string>();
-                        if (settings.TryGetValue(key, out object valueObject)
-                            && (defaultValues is null || valueObject != defaultValues))
+                        if (values?.Length > 0)
                         {
-                            if (valueObject is IEnumerable<string> currentValues)
+                            HashSet<string> aggregateValues = new HashSet<string>();
+                            if (settings.TryGetValue(key, out object valueObject)
+                                && (defaultValues is null || valueObject != defaultValues))
                             {
-                                aggregateValues.AddRange(currentValues);
+                                if (valueObject is IEnumerable<string> currentValues)
+                                {
+                                    aggregateValues.AddRange(currentValues);
+                                }
+
+                                if (valueObject is string currentValue)
+                                {
+                                    aggregateValues.Add(currentValue);
+                                }
                             }
 
-                            if (valueObject is string currentValue)
-                            {
-                                aggregateValues.Add(currentValue);
-                            }
+                            aggregateValues.AddRange(values);
+                            settings[key] = aggregateValues;
                         }
+                    });
 
-                        aggregateValues.AddRange(values);
-                        settings[key] = aggregateValues;
-                    }
-                });
+        private static TBootstrapper AddDefaultDocsSettings<TBootstrapper>(this TBootstrapper bootstrapper)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper
+                .AddSettingsIfNonExisting(new Dictionary<string, object> { { DocsKeys.SourceFiles, DefaultSourceFiles }, { DocsKeys.ApiPath, "api" }, { DocsKeys.OutputApiDocuments, true } });
+
+        private static TBootstrapper AddDocsServices<TBootstrapper>(this TBootstrapper bootstrapper)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper
+                .ConfigureServices(
+                    services => services
+                        .AddSingleton(new TypeNameLinks()));
+
+        #endregion
     }
 }

@@ -1,4 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="o.s.i.s.a. GmbH" file="TestValues.cs">
+//    (c) 2014. See licence text in binary folder.
+// </copyright>
+//  --------------------------------------------------------------------------------------------------------------------
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using osisa.Ensure;
 
@@ -11,16 +17,24 @@ namespace osisa.Docs.Tests.TestInfrastructure
 {
     internal static class TestValues
     {
+        #region Constants
+
         public const string TestPath = @"c:\TestBin\";
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public static void WriteDocuments(this TestContext @this, BootstrapperTestResult testResult, string pipelineName = "Code", Phase phase = Phase.Input)
+        {
+            @this.WriteLine("Documents:\r\n{0}", testResult.Outputs[pipelineName][phase].ListToString(m => m.ToDisplayString(), SpecialCharacterConstants.CRLF));
+        }
 
         public static void WriteLogs(this TestContext @this, BootstrapperTestResult testResult)
         {
             @this.WriteLine("LogMessages:\r\n{0}", testResult.LogMessages.ListToString(m => m.FormattedMessage, SpecialCharacterConstants.CRLF));
         }
 
-        public static void WriteDocuments(this TestContext @this, BootstrapperTestResult testResult, string pipelineName = "Code", Phase phase = Phase.Input)
-        {
-            @this.WriteLine("Documents:\r\n{0}", testResult.Outputs[pipelineName][phase].ListToString(m => m.ToDisplayString(), SpecialCharacterConstants.CRLF));
-        }
+        #endregion
     }
 }

@@ -24,6 +24,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <StatiqFrameworkVersion>1.0.0-beta.62</StatiqFrameworkVersion>
     <StatiqWebVersion>1.0.0-beta.49</StatiqWebVersion>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
 

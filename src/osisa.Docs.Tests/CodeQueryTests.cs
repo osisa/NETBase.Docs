@@ -59,7 +59,36 @@ namespace osisa.Docs.Tests
             TestContext.WriteLogs(result);
             TestContext.WriteDocuments(result);
 
-            result.ShouldHaveCodeElements(1, 9);
+            result.ShouldHaveCodeElements(1, ExpectedInputItemsCount);
+            result.Outputs.Count.ShouldBe(12);
+        }
+
+        /// <summary>
+        /// (Unit Test Method) adds project files should return one input document asynchronous.
+        /// </summary>
+        /// <returns>   A Task. </returns>
+        [TestMethod]
+        public async Task AddSolutionFiles_ShouldReturn1CodeItemAnd9InputItemsAsync()
+        {
+            // Arrange
+            ////"../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs",
+            Bootstrapper bootstrapper = Bootstrapper
+                .Factory
+                .CreateDocs(Array.Empty<string>())
+                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*Project*.cs")
+                .SetRootPath(TestPath)
+                ////.AddSetting("SourceFiles", "../src/**/{!.git,!bin,!obj,!packages,!*.Tests,}/**/*.cs");
+                .AddSetting("SourceFiles", "../src/TestSolution.sln")
+                .AddProjectFiles("../src/TestSolution.sln");
+
+            // Act
+            BootstrapperTestResult result = await bootstrapper.RunTestAsync();
+
+            // Assert
+            TestContext.WriteLogs(result);
+            TestContext.WriteDocuments(result);
+
+            result.ShouldHaveCodeElements(1, ExpectedInputItemsCount);
             result.Outputs.Count.ShouldBe(12);
         }
 
@@ -100,7 +129,7 @@ namespace osisa.Docs.Tests
             TestContext.WriteLogs(result);
             TestContext.WriteDocuments(result);
 
-            result.ShouldHaveCodeElements(4,9);
+            result.ShouldHaveCodeElements(4, ExpectedInputItemsCount);
             result.Outputs.Count.ShouldBe(12);
         }
 
@@ -184,7 +213,7 @@ namespace osisa.Docs.Tests
             TestContext.WriteLogs(result);
             TestContext.WriteDocuments(result);
 
-            result.ShouldHaveCodeElements(3, 9);
+            result.ShouldHaveCodeElements(3, ExpectedInputItemsCount);
             result.Outputs.Count.ShouldBe(12);
         }
 
@@ -218,8 +247,8 @@ namespace osisa.Docs.Tests
             Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
             dictionary.Count.ShouldBe(4);
             IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
-            inDocuments.Length.ShouldBe(1);
-            inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
+            inDocuments.Length.ShouldBe(0);
+            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
 
         #endregion

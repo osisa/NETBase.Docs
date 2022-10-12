@@ -5,8 +5,12 @@ await Bootstrapper
     .Factory
     .CreateDocs(args)
     .SetRootPath(@"C:/TestBin")
-    .AddSetting("SourceFiles", "../src/**/TestCoreClassLibrary.csproj")
-    .AddProjectFiles("../src/**/TestCoreClassLibrary.csproj")
+    //.AddSetting("SourceFiles", "../src/**/TestCoreClassLibrary.csproj")
+    //.AddProjectFiles("../src/**/TestCoreClassLibrary.csproj")
+
+    .AddSetting("SourceFiles", "../src/TestSolution.sln")
+    .AddProjectFiles("../src/TestSolution.sln")
+
     ////.AddAssemblyFiles("src/**/*.dll")
     ////.AddSolutionFiles(@"**/*.sln")
     ////.AddSetting("SourceFiles", string.Empty)

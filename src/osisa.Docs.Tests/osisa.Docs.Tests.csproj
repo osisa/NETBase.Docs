@@ -2,10 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
-
-  <Import Project="..\Test.Build.props" />
 
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\..\CustomDictionary.xml">
@@ -14,42 +11,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221003-04" />-->
-    <!--<PackageReference Include="Moq" Version="4.18.2" />-->
-    <!--<PackageReference Include="MSTest.TestAdapter" Version="2.3.0-preview-20220810-02" />-->
-    <!--<PackageReference Include="MSTest.TestFramework" Version="2.3.0-preview-20220810-02" />-->
-    <PackageReference Include="osisa.Ensure" />
-    <PackageReference Include="osisa.TestInfrastructure" />
-    <PackageReference Include="Statiq.Core" />
-    <PackageReference Include="Statiq.CodeAnalysis" />
-    <PackageReference Include="Statiq.App" />
-    <PackageReference Include="Statiq.Testing" />
-    <PackageReference Include="Statiq.Docs" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221003-04" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.3.0-preview-20220810-02" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.3.0-preview-20220810-02" />
+    <PackageReference Include="osisa.Ensure" Version="0.2.0-ModelFeature.6582" />
+    <PackageReference Include="osisa.TestInfrastructure" Version="0.2.0-ModelFeature.6582" />
+    <PackageReference Include="Statiq.CodeAnalysis" Version="1.0.0-beta.62" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
-    <PackageReference Include="Roslynator.Analyzers" />
-    <PackageReference Update="StyleCop.Analyzers" />
+    <ProjectReference Include="..\Statiq.Docs\Statiq.Docs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" />
+    <PackageReference Update="Roslynator.Analyzers" Version="4.1.1" />
+    <!--<PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435" />-->
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="TestItems\TestClassLibrary\TestFolder\TestProjectSubFolderItem.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="TestItems\TestClassLibrary\TestProjectFolderItem.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="TestItems\TestClassLibrary\TestProjectFolder\TestProjectFolderItem.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="TestItems\TestCoreClassLibrary\TestClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
 
 </Project>

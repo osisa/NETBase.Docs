@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,23 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="C:\repos\NETBase.Docs\SolutionInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Statiq.Docs.targets" Pack="true" PackagePath="build\$(TargetFramework)\" />
     <None Include="Statiq.Docs.targets" Pack="true" PackagePath="buildTransitive\$(TargetFramework)\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
-    <PackageReference Include="Roslynator.Analyzers" />
-    <PackageReference Include="StyleCop.Analyzers" />
-    <PackageReference Include="Statiq.Web" />
-    <PackageReference Include="Statiq.CodeAnalysis" />
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" />
+    <PackageReference Update="Roslynator.Analyzers" Version="4.1.1" />
+    <!--<PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435" />-->
   </ItemGroup>
 
-  <!--
   <Choose>
     <When Condition=" '$(StatiqWebVersion)' == ''">
       <ItemGroup>
@@ -49,6 +42,5 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
-  -->
 
 </Project>

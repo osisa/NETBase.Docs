@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,17 +7,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <Import Project="..\Test.Build.props" />
-
   <ItemGroup>
-    <PackageReference Include="Statiq.App" />
-    <PackageReference Include="Statiq.Core" />
+    <PackageReference Include="Statiq.App" Version="1.0.0-beta.62" />
+    <PackageReference Include="Statiq.Core" Version="1.0.0-beta.62" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
-    <PackageReference Include="Roslynator.Analyzers" />
-    <PackageReference Include="StyleCop.Analyzers" />
+    <ProjectReference Include="..\Statiq.Docs\Statiq.Docs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" />
+    <PackageReference Update="Roslynator.Analyzers" Version="4.1.1" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435" />
   </ItemGroup>
 
 </Project>

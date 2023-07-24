@@ -47,6 +47,31 @@ namespace Statiq.Docs
                 .AddDefaultDocsSettings()
                 .ConfigureEngine(e => e.LogAndCheckVersion(typeof(BootstrapperExtensions).Assembly, "Statiq Docs", DocsKeys.MinimumStatiqDocsVersion));
 
+        private static TBootstrapper AddDocsServices<TBootstrapper>(this TBootstrapper bootstrapper)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper
+                .ConfigureServices(services => services
+                    .AddSingleton(new TypeNameLinks()));
+
+        private static TBootstrapper AddDefaultDocsSettings<TBootstrapper>(this TBootstrapper bootstrapper)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper
+                .AddSettingsIfNonExisting(new Dictionary<string, object>
+                {
+                    {
+                        DocsKeys.SourceFiles,
+                        DefaultSourceFiles
+                    },
+                    { DocsKeys.ApiPath, "api" },
+                    { DocsKeys.OutputApiDocuments, true }
+                });
+
+        public static TBootstrapper AddSourceFiles<TBootstrapper>(
+            this TBootstrapper bootstrapper,
+            params string[] sourceFiles)
+            where TBootstrapper : IBootstrapper =>
+            bootstrapper.AddCodeFiles(DocsKeys.SourceFiles, DefaultSourceFiles, sourceFiles);
+
         public static TBootstrapper AddProjectFiles<TBootstrapper>(
             this TBootstrapper bootstrapper,
             params string[] sourceFiles)
@@ -59,11 +84,6 @@ namespace Statiq.Docs
             where TBootstrapper : IBootstrapper =>
             bootstrapper.AddCodeFiles(DocsKeys.SolutionFiles, null, sourceFiles);
 
-        public static TBootstrapper AddSourceFiles<TBootstrapper>(
-            this TBootstrapper bootstrapper,
-            params string[] sourceFiles)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper.AddCodeFiles(DocsKeys.SourceFiles, DefaultSourceFiles, sourceFiles);
 
         #endregion
 
@@ -100,18 +120,6 @@ namespace Statiq.Docs
                             settings[key] = aggregateValues;
                         }
                     });
-
-        private static TBootstrapper AddDefaultDocsSettings<TBootstrapper>(this TBootstrapper bootstrapper)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper
-                .AddSettingsIfNonExisting(new Dictionary<string, object> { { DocsKeys.SourceFiles, DefaultSourceFiles }, { DocsKeys.ApiPath, "api" }, { DocsKeys.OutputApiDocuments, true } });
-
-        private static TBootstrapper AddDocsServices<TBootstrapper>(this TBootstrapper bootstrapper)
-            where TBootstrapper : IBootstrapper =>
-            bootstrapper
-                .ConfigureServices(
-                    services => services
-                        .AddSingleton(new TypeNameLinks()));
 
         #endregion
     }

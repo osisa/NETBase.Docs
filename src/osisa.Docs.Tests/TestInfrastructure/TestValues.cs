@@ -20,7 +20,7 @@ namespace osisa.Docs.Tests.TestInfrastructure
         #region Constants
 
         //public const string TestPath = @"c:\TestBin\";
-        public const string TestPath = @"C:\statiq\NETBase.Docs\TestData\TestBin\";
+        public const string TestPath = @"C:\repos\NETBase.Docs\TestData\TestBin\";
 
         public const int ExpectedInputItemsCount = 14;
 

@@ -1,3 +1,22 @@
+# osisa docs
+
+## Set TestValues.cs properly
+
+Make sure that your \src\osisa.Docs.Tests\TestInfrastructure\TestValues.cs file 
+has its TestPath variable pointing to the \TestData\TestBin\ folder of the git repository.
+
+This folder may be different of every machine.
+
+## Tests failing?
+
+AdditionallyTests in osisa.Docs.Tests may fail.
+If this is the case, please delete the /TestData/TestBin folder and instead extract the included TestBin.zip file.
+
+This workaround has worked in the past. We're not sure (yet) why the tests fail on some machines.
+
+
+-------
+
 # Statiq Docs
 
 ![Logo](logo.png)

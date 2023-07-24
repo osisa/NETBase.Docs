@@ -12,9 +12,6 @@
     <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Statiq.Docs\Statiq.Docs.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />

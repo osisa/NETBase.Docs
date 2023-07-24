@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Statiq.Docs\Statiq.Docs.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
     <PackageReference Include="Roslynator.Analyzers" />
     <PackageReference Include="StyleCop.Analyzers" />

@@ -320,7 +320,7 @@
     <PackageVersion Include="Spectre.Console.Cli.StrongName" Version="0.0.0-preview.0.559" />
     <PackageVersion Include="Syroot.Windows.IO.KnownFolders" Version="1.3.0" />
     <PackageVersion Include="Statiq.Web" Version="1.0.0-beta.58" />
-    <PackageVersion Include="Statiq.Docs" Version="1.0.0-beta.70" />
+    <PackageVersion Include="Statiq.Docs" Version="1.0.0-beta.14" />
     <PackageVersion Include="Statiq.Core" Version="1.0.0-beta.70" />
     <PackageVersion Include="Statiq.CodeAnalysis" Version="1.0.0-beta.70" />
     <PackageVersion Include="Statiq.App" Version="1.0.0-beta.70" />
@@ -330,10 +330,6 @@
     <PackageVersion Include="TypedSignalR.Client" Version="3.4.0" />
     <PackageVersion Include="UblSharp" Version="1.1.1" />
     <PackageVersion Include="Vogen" Version="3.0.16" />
-
-    
-    
-    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.435" />
 
   </ItemGroup>
 </Project>

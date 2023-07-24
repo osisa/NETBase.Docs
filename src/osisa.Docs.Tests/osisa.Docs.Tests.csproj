@@ -24,10 +24,7 @@
     <PackageReference Include="Statiq.CodeAnalysis" />
     <PackageReference Include="Statiq.App" />
     <PackageReference Include="Statiq.Testing" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Statiq.Docs\Statiq.Docs.csproj" />
+    <PackageReference Include="Statiq.Docs" />
   </ItemGroup>
 
   <ItemGroup>

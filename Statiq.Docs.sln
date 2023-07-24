@@ -20,6 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		CustomDictionary.xml = CustomDictionary.xml
 		Directory.Build.props = Directory.Build.props
+		src\Directory.Packages.props = src\Directory.Packages.props
+		nuget.config = nuget.config
+		osisaNoPwd.snk = osisaNoPwd.snk
+		osisaPPKF.snk = osisaPPKF.snk
+		src\Test.Build.props = src\Test.Build.props
 	EndProjectSection
 EndProject
 Global

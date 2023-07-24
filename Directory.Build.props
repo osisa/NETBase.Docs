@@ -1,50 +1,138 @@
 <Project>
   <PropertyGroup>
-    <Version Condition="'$(StatiqDocsVersion)' == ''">1.0.0</Version>
-    <Version Condition="'$(StatiqDocsVersion)' != ''">$(StatiqDocsVersion)</Version>
-    <InformationalVersion>$(Version)</InformationalVersion>
-    <AssemblyVersion>$(Version.Split('-')[0])</AssemblyVersion>
-    <FileVersion>$(Version.Split('-')[0])</FileVersion>
-    <Product>Statiq Docs</Product>
-    <Copyright>Copyright © Statiq/Dave Glick</Copyright>
-    <Authors>Dave Glick, Other Awesome Contributors</Authors>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/statiqdev/Statiq.Docs</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/statiqdev/Statiq.Docs.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <StatiqFrameworkVersion>1.0.0-beta.62</StatiqFrameworkVersion>
-    <StatiqWebVersion>1.0.0-beta.49</StatiqWebVersion>
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
+    <SolutionOutputPath>$(SolutionDir)..\bin</SolutionOutputPath>
+    <SolutionOutputPath>$(MSBuildThisFileDirectory)bin</SolutionOutputPath>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <SignAssembly>True</SignAssembly>
+    <PublicKey>00240000048000009400000006020000002400005253413100040000010001005b0d1b000d968fe9b0a23ddc59c685356c257f45a6f098f4ba9dcee963cb83401aa69dfd8496ecbdc02771cc5e6690ea6605a60452f8af0bcd3931df53ab0e8ecdd38953e29361c6c8e545d255efacf7bd40afbb0b371cdb86819c6bed2febe2abc41d8647dc36102f40a64c83ea0209e899c97748ab979eb148c5edcbed9e87</PublicKey>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)osisaNoPwd.snk</AssemblyOriginatorKeyFile>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <NoWarn>NU1603;CS8601;CS8600;NU5104,NU1701;NU5125;NU1507;CS8002;CS3001;CS3002;CS3003;CS3024;CS0649;CS3009;CS0067;CS3027;CA1816;CA1822;NU5104</NoWarn>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+
+    <LangVersion>11</LangVersion>
+    <NETCoreVersion>net7.0-windows</NETCoreVersion>
+    <LibraryFramework>netstandard2.0</LibraryFramework>
+    <DefaultNetTargetFramework>net7.0</DefaultNetTargetFramework>
+    <DefaultNetTargetFrameworkVersion>v6.0</DefaultNetTargetFrameworkVersion>
+
+    <!--<EFCoreVersion>3.1.22</EFCoreVersion>
+    <EFCoreJetVersion>3.1.1</EFCoreJetVersion>
+    
+    <MicrosoftNETTestSdkVersion>17.5.0-preview-20221003-04</MicrosoftNETTestSdkVersion>
+    <MSTestTestAdapterVersion>3.0.2</MSTestTestAdapterVersion>
+    <MSTestTestFrameworkVersion>3.0.2</MSTestTestFrameworkVersion>
+    <MoqVersion>4.18.2</MoqVersion>
+    <FluentAssertion>6.8.0</FluentAssertion>-->
+
+    <!--<SystemConfigurationVersion>7.0.0</SystemConfigurationVersion>
+    <SystemVersion>0.2.0-alpha.5170</SystemVersion>
+    <FileProviderVersion>7.0.0</FileProviderVersion>
+    <JsonVersion>7.0.0</JsonVersion>
+    <ExtensionVersion>7.0.0</ExtensionVersion>
+    <EventVersion>0.83.4713</EventVersion>-->
+    <!--<SystemComponentModelAnnotationsVersion>6.0.0-preview.4.21253.7</SystemComponentModelAnnotationsVersion>
+    <GraphVersion>5.0.0-rc.1</GraphVersion>
+    <GraphVersionCore>3.0.0-rc.1</GraphVersionCore>
+    <MSIdentityVersion>4.48.1</MSIdentityVersion>
+    <osisaTestVersion>0.2.0-ModelFeature.6962</osisaTestVersion>-->
+    <!--<osisaBaseVersion>0.2.0-ModelFeature.7022</osisaBaseVersion>-->
+
+    <!--<osisaBaseVersion>0.2.0-ModelFeature.7689</osisaBaseVersion>-->
+
+    <!--<osisaBaseVersion>0.2.0-ModelFeature.7022</osisaBaseVersion>-->
+    <!--<osisaRepositoryVersion>0.2.0-ModelFeature.7691</osisaRepositoryVersion>
+    <NewtonsoftVersion>13.0.2-beta3</NewtonsoftVersion>
+    <UserSecretsVersion>7.0.0</UserSecretsVersion>
+    <osisaNPOI>0.2.2-beta.0</osisaNPOI>-->
+
+    <CompileBasic>true</CompileBasic>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <GetVersion>true</GetVersion>
+
+    <PackageVersion Condition=" '$(UseFullSemVerForNuGet)' == 'false' ">$(GitVersion_NuGetVersion)</PackageVersion>
+    <PackageVersion Condition=" '$(UseFullSemVerForNuGet)' == 'true' ">$(GitVersion_FullSemVer)</PackageVersion>
+    <Nullable>enable</Nullable>
+    <Version>$(FullSemVer)</Version>
+    <IsNuke>true</IsNuke>
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>true</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyInternalsVisibleAttribute>true</GenerateAssemblyInternalsVisibleAttribute>
+    <GenerateUserSecretAttribute>false</GenerateUserSecretAttribute>
   </PropertyGroup>
 
-
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)\LICENSE.md" Pack="true" PackagePath=""/>
-    <None Include="$(MSBuildThisFileDirectory)\icon.png" Pack="true" PackagePath="\"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <!--<PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All"/>-->
-    <PackageReference Include="Roslynator.Analyzers" Version="4.0.2" PrivateAssets="All"/>
-    <!-- It appears as though there might be a performance issue in versions of Microsoft.VisualStudio.Threading.Analyzers past this at least through 17.0.64 -->
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60" PrivateAssets="All"/>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)'=='.csproj' And '$(SkipSolutionInfo)'==''">
+    <Compile Include="$(MSBuildThisFileDirectory)SolutionInfo.cs" Link="Properties\SolutionInfo.cs" />
+    <!--<Compile Include="$(MSBuildThisFileDirectory)\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />-->
+    <!--<Compile Include="$(MSBuildThisFileDirectory)\CustomDictionary.xml" Link="CustomDictionary.xml" />-->
   </ItemGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
-    </AssemblyAttribute>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)'=='.vbproj' And '$(SkipSolutionInfo)'==''">
+    <Compile Include="$(MSBuildThisFileDirectory)SolutionInfo.vb" Link="Properties\SolutionInfo.vb" />
+    <!--<Compile Include="$(MSBuildThisFileDirectory)\CustomDictionary.xml" Link="CustomDictionary.xml" />-->
   </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461'">
+    <DefineConstants>NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <DefineConstants>NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
+    <DefineConstants>NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net50'">
+    <DefineConstants>NETFULL</DefineConstants>
+    <DefineConstants>NET50</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net60'">
+    <DefineConstants>NETFULL</DefineConstants>
+    <DefineConstants>NET60</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
+    <DefineConstants>NETFULL</DefineConstants>
+    <DefineConstants>NET70</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
+    <DefineConstants>NETCORE2_1</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>NETCORE3_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>NETCORE3_1</DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="Info">
+    <Message Text='TargetFramework=$(MSBuildProject) is "$(TargetFramework)" $(DefineConstants).  - $(SolutionPackageVersion)' />
+  </Target>
 
 </Project>

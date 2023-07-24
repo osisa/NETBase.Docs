@@ -1,18 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-rc.1.22426.10" />
+    <Compile Remove="C:\repos\NETBase.Docs\SolutionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Statiq.Docs\Statiq.Docs.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221003-04" />
-    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" />
-    <PackageReference Update="NUnit3TestAdapter" Version="4.3.0-alpha-net7.4" />
-    <PackageReference Update="Roslynator.Analyzers" Version="4.1.1" />
-    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Roslynator.Analyzers" />
+    <PackageReference Include="Statiq.Testing" />
+    <PackageReference Include="StyleCop.Analyzers" />
   </ItemGroup>
 
+  <!--
   <Choose>
     <When Condition=" '$(StatiqFrameworkVersion)' == ''">
       <ItemGroup>
@@ -26,6 +37,7 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+  -->
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <DefineConstants>Is_Windows</DefineConstants>

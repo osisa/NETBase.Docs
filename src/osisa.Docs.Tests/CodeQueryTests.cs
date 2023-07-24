@@ -248,7 +248,6 @@ namespace osisa.Docs.Tests
             dictionary.Count.ShouldBe(4);
             IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
             inDocuments.Length.ShouldBe(0);
-            ////inDocuments[0].Source.FullPath.ShouldEndWith("index.md");
         }
 
         #endregion

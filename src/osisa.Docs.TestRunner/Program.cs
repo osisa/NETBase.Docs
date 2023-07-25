@@ -9,7 +9,8 @@ await Bootstrapper
     //.AddProjectFiles("../src/**/TestCoreClassLibrary.csproj")
 
     .AddSetting("SourceFiles", "../src/TestSolution.sln")
-    .AddProjectFiles("../src/TestSolution.sln")
+    .AddSolutionFiles("../src/TestSolution.sln")
+    //.AddProjectFiles("../src/TestSolution.sln")
 
     ////.AddAssemblyFiles("src/**/*.dll")
     ////.AddSolutionFiles(@"**/*.sln")

@@ -247,7 +247,7 @@ namespace osisa.Docs.Tests
             Dictionary<Phase, ImmutableArray<IDocument>> dictionary = result.Outputs.First().Value;
             dictionary.Count.ShouldBe(4);
             IDocument[] inDocuments = dictionary[Phase.Input].ToArray();
-            inDocuments.Length.ShouldBe(0);
+            inDocuments.Length.ShouldBe(1);
         }
 
         #endregion

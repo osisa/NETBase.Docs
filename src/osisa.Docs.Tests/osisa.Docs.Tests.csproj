@@ -17,12 +17,15 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="osisa.Ensure" Version="0.9.0-ModelFeature.140" />
     <PackageReference Include="osisa.TestInfrastructure" Version="0.9.0-ModelFeature.140" />
-    <PackageReference Include="Statiq.CodeAnalysis" Version="1.0.0-beta.62" />
+    <PackageReference Include="Statiq.CodeAnalysis" Version="1.0.0-beta.70" />
+    <PackageReference Include="Statiq.Docs" Version="1.0.0-beta.14" />
   </ItemGroup>
 
+  <!--
   <ItemGroup>
     <ProjectReference Include="..\Statiq.Docs\Statiq.Docs.csproj" />
   </ItemGroup>
+  -->
 
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" />
